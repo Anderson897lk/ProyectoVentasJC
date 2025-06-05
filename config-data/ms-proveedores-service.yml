@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: ms-proveedores-service
+    name: ms-proveedor-service
 
   # Si en algún momento desearas usar MySQL, descomenta estas líneas y ajusta según tus credenciales:
   # datasource:
