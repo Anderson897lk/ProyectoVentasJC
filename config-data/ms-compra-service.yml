@@ -22,15 +22,19 @@ spring:
       enabled: true
       path: /h2-console
 
-
-  feign:
-    inventario:
-      base-url: localhost:8086
-    producto:
-      base-url: localhost:8083
-    proveedor:
-      base-url: localhost:8082
-
+# Feign: URLs base para ms_cliente y ms_producto
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+  cliente:
+    url: http://localhost:8081/api/clientes
+  producto:
+    url: http://localhost:8083/api/productos
+  inventario: # nueva sección
+    url: http://localhost:8086/api/stock
 eureka:
   client:
     serviceUrl:
