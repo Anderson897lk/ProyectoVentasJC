@@ -1,19 +1,25 @@
+// src/main/java/com/example/ms_compra/dto/StockUpdateDto.java
 package com.example.ms_compra.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class StockUpdateDto {
-    @Min(1)
+
+    @NotNull
+    @Min(0)
     private Integer cantidad;
 
+    public StockUpdateDto() {}
 
+    public StockUpdateDto(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
 }

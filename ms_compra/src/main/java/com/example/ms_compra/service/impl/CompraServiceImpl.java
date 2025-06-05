@@ -1,16 +1,18 @@
 package com.example.ms_compra.service.impl;
 
 import com.example.ms_compra.dto.CompraDto;
+import com.example.ms_compra.dto.StockUpdateDto;
 import com.example.ms_compra.entity.Compra;
-import com.example.ms_compra.repository.CompraRepository;
-import com.example.ms_compra.service.CompraService;
-import com.example.ms_compra.feign.ProductoClient;
 import com.example.ms_compra.feign.InventarioClient;
+import com.example.ms_compra.feign.ProductoClient;
 import com.example.ms_compra.feign.ProveedorClient;
 import com.example.ms_compra.dto.ProveedorDto;
+import com.example.ms_compra.repository.CompraRepository;
+import com.example.ms_compra.service.CompraService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class CompraServiceImpl implements CompraService {
+
     private final CompraRepository compraRepository;
     private final ProductoClient productoClient;
     private final InventarioClient inventarioClient;
@@ -48,13 +51,13 @@ public class CompraServiceImpl implements CompraService {
                 .proveedorId(compraDto.getProveedorId())
                 .fechaCompra(compraDto.getFechaCompra())
                 .build();
-
         Compra guardada = compraRepository.save(entidad);
 
-        // 4. Actualizar stock en Inventario (entrada)
-        inventarioClient.reponeStock(guardada.getProductoId(), guardada.getCantidad());
+        // 4. RE-PONER stock en Inventario: ahora enviamos un StockUpdateDto
+        StockUpdateDto updateDto = new StockUpdateDto(guardada.getCantidad());
+        inventarioClient.reponeStock(guardada.getProductoId(), updateDto);
 
-        // 5. Actualizar precio de venta en Producto (si cambia)
+        // 5. Actualizar precio de venta en Producto
         productoClient.actualizarPrecio(guardada.getProductoId(), guardada.getPrecioVenta());
 
         return mapToDto(guardada);
@@ -80,7 +83,7 @@ public class CompraServiceImpl implements CompraService {
         Compra existente = compraRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Compra no encontrada con id: " + id));
 
-        // Guardar valores previos para ajustar stock
+        // Guardamos la cantidad anterior para ajustar stock
         int cantidadAnterior = existente.getCantidad();
 
         // Actualizar solo campos permitidos
@@ -93,15 +96,18 @@ public class CompraServiceImpl implements CompraService {
 
         Compra actualizado = compraRepository.save(existente);
 
-        // Re-ajustar stock: si cambia cantidad
-        int diffCantidad = actualizado.getCantidad() - cantidadAnterior;
-        if (diffCantidad > 0) {
-            inventarioClient.reponeStock(actualizado.getProductoId(), diffCantidad);
-        } else if (diffCantidad < 0) {
-            inventarioClient.reservaStock(actualizado.getProductoId(), Math.abs(diffCantidad));
+        // 6. AJUSTAR stock: si la nueva cantidad es mayor, repone; si es menor, reserva
+        int diff = actualizado.getCantidad() - cantidadAnterior;
+        if (diff > 0) {
+            // reponer diferencia
+            StockUpdateDto dtoRep = new StockUpdateDto(diff);
+            inventarioClient.reponeStock(actualizado.getProductoId(), dtoRep);
+        } else if (diff < 0) {
+            // reservar la diferencia en negativo
+            inventarioClient.reservaStock(actualizado.getProductoId(), Math.abs(diff));
         }
 
-        // Actualizar precio en Producto si cambió
+        // 7. Actualizar precio en Producto si cambió
         productoClient.actualizarPrecio(actualizado.getProductoId(), actualizado.getPrecioVenta());
 
         return mapToDto(actualizado);
@@ -112,7 +118,7 @@ public class CompraServiceImpl implements CompraService {
         Compra compra = compraRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Compra no encontrada con id: " + id));
 
-        // Al eliminar, restar stock en Inventario
+        // Al eliminar, restar stock en Inventario (reservar)
         inventarioClient.reservaStock(compra.getProductoId(), compra.getCantidad());
 
         compraRepository.deleteById(id);
