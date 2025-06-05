@@ -1,5 +1,6 @@
 package com.example.ms_compra.feign;
 
+import com.example.ms_compra.dto.StockDto;
 import com.example.ms_compra.dto.StockUpdateDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -8,20 +9,11 @@ import org.springframework.web.bind.annotation.*;
 public interface InventarioClient {
 
     /**
-     * Llama a PUT /api/stock/{productoId}/reponer
-     * con un JSON { "cantidad": … } en el body.
+     * Llama a PUT /api/stock/{productoId}/reservar?cantidad={cantidad}
+     * Devuelve el StockDto actualizado o lanza 400 si no existe o no hay suficiente stock.
      */
-    @PutMapping("/api/stock/{productoId}/reponer")
-    void reponeStock(
-            @PathVariable("productoId") Long productoId,
-            @RequestBody StockUpdateDto updateDto
-    );
-
-    /**
-     * Llama a PUT /api/stock/{productoId}/reservar?cantidad=…
-     */
-    @PutMapping("/api/stock/{productoId}/reservar")
-    void reservaStock(
+    @PutMapping("/{productoId}/reservar")
+    StockDto reservarStock(
             @PathVariable("productoId") Long productoId,
             @RequestParam("cantidad") Integer cantidad
     );
