@@ -4,7 +4,7 @@ import com.example.ms_compra.dto.StockUpdateDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "ms-inventario-service", url = "http://${feign.inventario.base-url}")
+@FeignClient(name = "ms-inventario-service", url = "${feign.inventario.url}")
 public interface InventarioClient {
 
     /**
