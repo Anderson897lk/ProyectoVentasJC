@@ -1,6 +1,7 @@
 package com.example.ms_compra.service.impl;
 
 import com.example.ms_compra.dto.CompraDto;
+import com.example.ms_compra.dto.StockUpdateDto;
 import com.example.ms_compra.entity.Compra;
 import com.example.ms_compra.repository.CompraRepository;
 import com.example.ms_compra.service.CompraService;
@@ -52,10 +53,13 @@ public class CompraServiceImpl implements CompraService {
 
         Compra guardada = compraRepository.save(entidad);
 
-        // 4. Actualizar stock en microservicio Inventario (reponer stock)
-        inventarioClient.reponerStock(guardada.getProductoId(), guardada.getCantidad());
+        // 4. Reponer stock (ENTRADA)
+        inventarioClient.reponerStock(
+                guardada.getProductoId(),
+                StockUpdateDto.builder().cantidad(guardada.getCantidad()).build()
+        );
 
-        // 5. Actualizar precio de venta en microservicio Producto (si cambia)
+        // 5. Actualizar precio de venta en microservicio Producto
         productoClient.actualizarPrecio(
                 guardada.getProductoId(),
                 guardada.getPrecioVenta()
@@ -84,7 +88,7 @@ public class CompraServiceImpl implements CompraService {
         Compra existente = compraRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Compra no encontrada con id: " + id));
 
-        // Mantener cantidad anterior para ajuste
+        // Guardamos valores anteriores para ajustar stock
         int cantidadAnterior = existente.getCantidad();
 
         // Actualizar solo campos permitidos
@@ -97,14 +101,20 @@ public class CompraServiceImpl implements CompraService {
 
         Compra actualizado = compraRepository.save(existente);
 
-        // Re-ajustar stock: calcular diferencia
+        // Re-ajustar stock: diferencia entre la nueva y la anterior
         int diffCantidad = actualizado.getCantidad() - cantidadAnterior;
         if (diffCantidad > 0) {
-            // Si aumentó, reponer stock adicional
-            inventarioClient.reponerStock(actualizado.getProductoId(), diffCantidad);
+            // ENTRADA extra
+            inventarioClient.reponerStock(
+                    actualizado.getProductoId(),
+                    StockUpdateDto.builder().cantidad(diffCantidad).build()
+            );
         } else if (diffCantidad < 0) {
-            // Si disminuyó, reservar salida del stock
-            inventarioClient.reservarStock(actualizado.getProductoId(), Math.abs(diffCantidad));
+            // SALIDA de la diferencia
+            inventarioClient.reservarStock(
+                    actualizado.getProductoId(),
+                    StockUpdateDto.builder().cantidad(Math.abs(diffCantidad)).build()
+            );
         }
 
         // Actualizar precio en Productos si cambió
@@ -121,8 +131,11 @@ public class CompraServiceImpl implements CompraService {
         Compra compra = compraRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Compra no encontrada con id: " + id));
 
-        // Al eliminar, restar stock en Inventario (salida)
-        inventarioClient.reservarStock(compra.getProductoId(), compra.getCantidad());
+        // Al eliminar, restar stock en Inventario (SALIDA)
+        inventarioClient.reservarStock(
+                compra.getProductoId(),
+                StockUpdateDto.builder().cantidad(compra.getCantidad()).build()
+        );
 
         compraRepository.deleteById(id);
     }
