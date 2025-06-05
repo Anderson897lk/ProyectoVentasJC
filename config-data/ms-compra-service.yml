@@ -29,15 +29,17 @@ feign:
       default:
         connectTimeout: 5000
         readTimeout: 5000
-  cliente:
-    url: http://localhost:8081/api/clientes
+  Proveedor:
+    url: http://localhost:8082/api/proveedores
   producto:
     url: http://localhost:8083/api/productos
   inventario: # nueva sección
     url: http://localhost:8086/api/stock
+
 eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8090/eureka}
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
