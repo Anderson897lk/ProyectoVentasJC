@@ -11,6 +11,7 @@ import com.example.ms_compra.dto.ProveedorDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,12 +52,8 @@ public class CompraServiceImpl implements CompraService {
 
         Compra guardada = compraRepository.save(entidad);
 
-        // 4. Actualizar stock en microservicio Inventario
-        inventarioClient.registrarMovimiento(
-                guardada.getProductoId(),
-                guardada.getCantidad(),
-                "ENTRADA"
-        );
+        // 4. Actualizar stock en microservicio Inventario (reponer stock)
+        inventarioClient.reponerStock(guardada.getProductoId(), guardada.getCantidad());
 
         // 5. Actualizar precio de venta en microservicio Producto (si cambia)
         productoClient.actualizarPrecio(
@@ -87,6 +84,9 @@ public class CompraServiceImpl implements CompraService {
         Compra existente = compraRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Compra no encontrada con id: " + id));
 
+        // Mantener cantidad anterior para ajuste
+        int cantidadAnterior = existente.getCantidad();
+
         // Actualizar solo campos permitidos
         existente.setCantidad(compraDto.getCantidad());
         existente.setPrecioCompra(compraDto.getPrecioCompra());
@@ -97,14 +97,14 @@ public class CompraServiceImpl implements CompraService {
 
         Compra actualizado = compraRepository.save(existente);
 
-        // Re-ajustar stock: primero restar el stock anterior, luego sumar el nuevo
-        int diffCantidad = actualizado.getCantidad() - existente.getCantidad();
-        if (diffCantidad != 0) {
-            inventarioClient.registrarMovimiento(
-                    actualizado.getProductoId(),
-                    diffCantidad,
-                    diffCantidad > 0 ? "ENTRADA" : "SALIDA"
-            );
+        // Re-ajustar stock: calcular diferencia
+        int diffCantidad = actualizado.getCantidad() - cantidadAnterior;
+        if (diffCantidad > 0) {
+            // Si aumentó, reponer stock adicional
+            inventarioClient.reponerStock(actualizado.getProductoId(), diffCantidad);
+        } else if (diffCantidad < 0) {
+            // Si disminuyó, reservar salida del stock
+            inventarioClient.reservarStock(actualizado.getProductoId(), Math.abs(diffCantidad));
         }
 
         // Actualizar precio en Productos si cambió
@@ -121,12 +121,8 @@ public class CompraServiceImpl implements CompraService {
         Compra compra = compraRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Compra no encontrada con id: " + id));
 
-        // Al eliminar, restar stock en Inventario
-        inventarioClient.registrarMovimiento(
-                compra.getProductoId(),
-                compra.getCantidad(),
-                "SALIDA"
-        );
+        // Al eliminar, restar stock en Inventario (salida)
+        inventarioClient.reservarStock(compra.getProductoId(), compra.getCantidad());
 
         compraRepository.deleteById(id);
     }
