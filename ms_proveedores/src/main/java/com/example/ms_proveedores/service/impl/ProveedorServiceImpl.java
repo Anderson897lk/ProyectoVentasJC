@@ -44,15 +44,16 @@ public class ProveedorServiceImpl implements ProveedorService {
 
     @Override
     public ProveedorDto crearProveedor(ProveedorDto proveedorDto) {
-        // Validar RUC con SUNAT antes de persistir
+        // Validar RUC con SUNAT
         SunatResponseDto sunatInfo = sunatClient.validarRuc(proveedorDto.getRuc());
         if (sunatInfo == null || sunatInfo.getRazonSocial() == null) {
             throw new RuntimeException("RUC inválido o no encontrado en SUNAT");
         }
-        // Asignar nombre de SUNAT si está vacío
+        // Si no se envió nombre, asignar razón social de SUNAT
         if (proveedorDto.getNombre() == null || proveedorDto.getNombre().isBlank()) {
             proveedorDto.setNombre(sunatInfo.getRazonSocial());
         }
+        // Verificar duplicados por RUC
         repository.findByRuc(proveedorDto.getRuc()).ifPresent(p -> {
             throw new RuntimeException("Proveedor con RUC ya existe");
         });
@@ -77,8 +78,8 @@ public class ProveedorServiceImpl implements ProveedorService {
     public ProveedorDto actualizarProveedor(Long id, ProveedorDto proveedorDto) {
         Proveedor existente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
-        // Validar RUC nuevamente si se modifica
-        if (!existente.getRuc().equals(proveedorDto.getRuc())) {
+        // Si cambió el RUC o no se envió nombre, validar en SUNAT
+        if (proveedorDto.getRuc() != null && !proveedorDto.getRuc().equals(existente.getRuc())) {
             SunatResponseDto sunatInfo = sunatClient.validarRuc(proveedorDto.getRuc());
             if (sunatInfo == null || sunatInfo.getRazonSocial() == null) {
                 throw new RuntimeException("RUC inválido o no encontrado en SUNAT");
@@ -90,11 +91,15 @@ public class ProveedorServiceImpl implements ProveedorService {
                 existente.setNombre(proveedorDto.getNombre());
             }
         } else {
-            existente.setNombre(proveedorDto.getNombre());
+            // Si no cambió RUC, pero se envió nombre, actualizarlo
+            if (proveedorDto.getNombre() != null && !proveedorDto.getNombre().isBlank()) {
+                existente.setNombre(proveedorDto.getNombre());
+            }
         }
-        existente.setTelefono(proveedorDto.getTelefono());
-        existente.setDireccion(proveedorDto.getDireccion());
-        existente.setCorreo(proveedorDto.getCorreo());
+        // Actualizar otros campos
+        if (proveedorDto.getTelefono() != null) existente.setTelefono(proveedorDto.getTelefono());
+        if (proveedorDto.getDireccion() != null) existente.setDireccion(proveedorDto.getDireccion());
+        if (proveedorDto.getCorreo() != null) existente.setCorreo(proveedorDto.getCorreo());
         Proveedor actualizado = repository.save(existente);
         return mapToDto(actualizado);
     }

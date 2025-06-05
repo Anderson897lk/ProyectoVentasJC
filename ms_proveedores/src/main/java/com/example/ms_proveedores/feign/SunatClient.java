@@ -5,8 +5,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "sunatClient", configuration = {})
+@FeignClient(name = "sunat-client", url = "${feign.sunat.base-url}")
 public interface SunatClient {
-    @GetMapping("/v1/ruc/{ruc}")
+    @GetMapping("/ruc/{ruc}")
     SunatResponseDto validarRuc(@PathVariable("ruc") String ruc);
 }

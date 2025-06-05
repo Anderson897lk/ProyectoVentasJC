@@ -7,5 +7,4 @@ public class SunatResponseDto {
     private String ruc;
     private String razonSocial;
     private String estado;
-    // otros campos de respuesta si aplica
 }

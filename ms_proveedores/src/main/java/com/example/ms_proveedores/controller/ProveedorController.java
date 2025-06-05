@@ -3,7 +3,6 @@ package com.example.ms_proveedores.controller;
 import com.example.ms_proveedores.dto.ProveedorDto;
 import com.example.ms_proveedores.dto.SunatResponseDto;
 import com.example.ms_proveedores.service.ProveedorService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,7 @@ public class ProveedorController {
     private final ProveedorService service;
 
     @PostMapping
-    public ResponseEntity<ProveedorDto> crear(@Valid @RequestBody ProveedorDto proveedorDto) {
+    public ResponseEntity<ProveedorDto> crear(@RequestBody ProveedorDto proveedorDto) {
         ProveedorDto creado = service.crearProveedor(proveedorDto);
         return ResponseEntity.ok(creado);
     }
@@ -35,7 +34,7 @@ public class ProveedorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProveedorDto> actualizar(@PathVariable Long id, @Valid @RequestBody ProveedorDto proveedorDto) {
+    public ResponseEntity<ProveedorDto> actualizar(@PathVariable Long id, @RequestBody ProveedorDto proveedorDto) {
         ProveedorDto actualizado = service.actualizarProveedor(id, proveedorDto);
         return ResponseEntity.ok(actualizado);
     }
@@ -46,7 +45,6 @@ public class ProveedorController {
         return ResponseEntity.noContent().build();
     }
 
-    // Nuevo endpoint para validar RUC y obtener nombre
     @GetMapping("/validar/{ruc}")
     public ResponseEntity<SunatResponseDto> validarRuc(@PathVariable String ruc) {
         SunatResponseDto respuesta = service.validarRucConSunat(ruc);
