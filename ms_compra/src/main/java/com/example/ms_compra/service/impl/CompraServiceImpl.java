@@ -1,7 +1,6 @@
 package com.example.ms_compra.service.impl;
 
 import com.example.ms_compra.dto.CompraDto;
-import com.example.ms_compra.dto.StockUpdateDto;
 import com.example.ms_compra.entity.Compra;
 import com.example.ms_compra.repository.CompraRepository;
 import com.example.ms_compra.service.CompraService;
@@ -12,7 +11,6 @@ import com.example.ms_compra.dto.ProveedorDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,17 +51,11 @@ public class CompraServiceImpl implements CompraService {
 
         Compra guardada = compraRepository.save(entidad);
 
-        // 4. Reponer stock (ENTRADA)
-        inventarioClient.reponerStock(
-                guardada.getProductoId(),
-                StockUpdateDto.builder().cantidad(guardada.getCantidad()).build()
-        );
+        // 4. Actualizar stock en Inventario (entrada)
+        inventarioClient.reponeStock(guardada.getProductoId(), guardada.getCantidad());
 
-        // 5. Actualizar precio de venta en microservicio Producto
-        productoClient.actualizarPrecio(
-                guardada.getProductoId(),
-                guardada.getPrecioVenta()
-        );
+        // 5. Actualizar precio de venta en Producto (si cambia)
+        productoClient.actualizarPrecio(guardada.getProductoId(), guardada.getPrecioVenta());
 
         return mapToDto(guardada);
     }
@@ -88,7 +80,7 @@ public class CompraServiceImpl implements CompraService {
         Compra existente = compraRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Compra no encontrada con id: " + id));
 
-        // Guardamos valores anteriores para ajustar stock
+        // Guardar valores previos para ajustar stock
         int cantidadAnterior = existente.getCantidad();
 
         // Actualizar solo campos permitidos
@@ -101,27 +93,16 @@ public class CompraServiceImpl implements CompraService {
 
         Compra actualizado = compraRepository.save(existente);
 
-        // Re-ajustar stock: diferencia entre la nueva y la anterior
+        // Re-ajustar stock: si cambia cantidad
         int diffCantidad = actualizado.getCantidad() - cantidadAnterior;
         if (diffCantidad > 0) {
-            // ENTRADA extra
-            inventarioClient.reponerStock(
-                    actualizado.getProductoId(),
-                    StockUpdateDto.builder().cantidad(diffCantidad).build()
-            );
+            inventarioClient.reponeStock(actualizado.getProductoId(), diffCantidad);
         } else if (diffCantidad < 0) {
-            // SALIDA de la diferencia
-            inventarioClient.reservarStock(
-                    actualizado.getProductoId(),
-                    StockUpdateDto.builder().cantidad(Math.abs(diffCantidad)).build()
-            );
+            inventarioClient.reservaStock(actualizado.getProductoId(), Math.abs(diffCantidad));
         }
 
-        // Actualizar precio en Productos si cambió
-        productoClient.actualizarPrecio(
-                actualizado.getProductoId(),
-                actualizado.getPrecioVenta()
-        );
+        // Actualizar precio en Producto si cambió
+        productoClient.actualizarPrecio(actualizado.getProductoId(), actualizado.getPrecioVenta());
 
         return mapToDto(actualizado);
     }
@@ -131,11 +112,8 @@ public class CompraServiceImpl implements CompraService {
         Compra compra = compraRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Compra no encontrada con id: " + id));
 
-        // Al eliminar, restar stock en Inventario (SALIDA)
-        inventarioClient.reservarStock(
-                compra.getProductoId(),
-                StockUpdateDto.builder().cantidad(compra.getCantidad()).build()
-        );
+        // Al eliminar, restar stock en Inventario
+        inventarioClient.reservaStock(compra.getProductoId(), compra.getCantidad());
 
         compraRepository.deleteById(id);
     }

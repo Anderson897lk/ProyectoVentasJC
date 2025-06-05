@@ -4,48 +4,40 @@ import com.example.ms_compra.dto.CompraDto;
 import com.example.ms_compra.service.CompraService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/compras")
 @RequiredArgsConstructor
-@Validated
 public class CompraController {
     private final CompraService compraService;
 
     @PostMapping
-    public ResponseEntity<CompraDto> crear(@Valid @RequestBody CompraDto compraDto) {
-        CompraDto creado = compraService.crearCompra(compraDto);
-        return new ResponseEntity<>(creado, HttpStatus.CREATED);
+    public ResponseEntity<CompraDto> crearCompra(@RequestBody @Valid CompraDto compraDto) {
+        return ResponseEntity.status(201).body(compraService.crearCompra(compraDto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CompraDto> obtener(@PathVariable Long id) {
-        CompraDto dto = compraService.obtenerCompra(id);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<CompraDto> obtenerCompra(@PathVariable Long id) {
+        return ResponseEntity.ok(compraService.obtenerCompra(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<CompraDto>> listar() {
-        List<CompraDto> lista = compraService.listarCompras();
-        return ResponseEntity.ok(lista);
+    public ResponseEntity<List<CompraDto>> listarCompras() {
+        return ResponseEntity.ok(compraService.listarCompras());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CompraDto> actualizar(
+    public ResponseEntity<CompraDto> actualizarCompra(
             @PathVariable Long id,
-            @Valid @RequestBody CompraDto compraDto) {
-        CompraDto actualizado = compraService.actualizarCompra(id, compraDto);
-        return ResponseEntity.ok(actualizado);
+            @RequestBody @Valid CompraDto compraDto) {
+        return ResponseEntity.ok(compraService.actualizarCompra(id, compraDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarCompra(@PathVariable Long id) {
         compraService.eliminarCompra(id);
         return ResponseEntity.noContent().build();
     }

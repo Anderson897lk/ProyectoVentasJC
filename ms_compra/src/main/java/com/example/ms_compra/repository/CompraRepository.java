@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CompraRepository extends JpaRepository<Compra, Long> {
-    // Métodos básicos de JPA ya están disponibles
 }
