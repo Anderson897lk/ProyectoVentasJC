@@ -18,7 +18,7 @@ public interface InventarioClient {
      * Llama a PUT /api/stock/{productoId}/reservar?cantidad={cantidad}
      * Devuelve el StockDto actualizado (o 400 si no existe o no hay suficiente stock).
      */
-    @PutMapping("/api/stock/{productoId}/reservar")
+    @PutMapping("/{productoId}/reservar")
     StockDto reservarStock(
             @PathVariable("productoId") Long productoId,
             @RequestParam("cantidad") Integer cantidad
@@ -29,7 +29,7 @@ public interface InventarioClient {
      * Body: {"cantidad": ...}
      * Devuelve el StockDto actualizado.
      */
-    @PutMapping("/api/stock/{productoId}/reponer")
+    @PutMapping("/{productoId}/reponer")
     StockDto reponeStock(
             @PathVariable("productoId") Long productoId,
             @RequestBody StockUpdateDto updateDto
