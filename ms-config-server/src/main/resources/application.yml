@@ -15,7 +15,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/Anderson897lk/AvancaClases.git # ruta del repositorio git
+          uri: https://github.com/Anderson897lk/ProyectoVentasJC.git # ruta del repositorio git
           searchPaths: config-data
           default-label: main
   security:
