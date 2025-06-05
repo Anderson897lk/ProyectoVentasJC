@@ -14,4 +14,6 @@ import jakarta.validation.constraints.Min;
 public class StockUpdateDto {
     @Min(1)
     private Integer cantidad;
+
+
 }

@@ -4,7 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "ms-inventario-service", url = "http://${feign.inventario.base-url}")
+@FeignClient(name = "ms-inventario-service", url = "${feign.inventario.url}")
 public interface InventarioClient {
     @PostMapping("/api/stock/{productoId}/reponer")
     void reponeStock(@RequestParam Long productoId,
