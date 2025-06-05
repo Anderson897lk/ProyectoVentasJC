@@ -23,7 +23,7 @@ public class ProveedorServiceImpl implements ProveedorService {
     private final SunatClient sunatClient;
 
     @Override
-    public ProveedorDto crearCliente(ProveedorDto proveedorDto) {
+    public ProveedorDto crearProveedor(ProveedorDto proveedorDto) {
         String razonSocial = proveedorDto.getRazonSocialONombre();
 
         // Si es DNI (8 dígitos), consultamos SUNAT y tomamos solo el nombre
@@ -63,14 +63,14 @@ public class ProveedorServiceImpl implements ProveedorService {
     }
 
     @Override
-    public ProveedorDto obtenerCliente(Long id) {
+    public ProveedorDto obtenerProveedorPorId(Long id) {
         Proveedor proveedor = proveedorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con id: " + id));
         return mapToDto(proveedor);
     }
 
     @Override
-    public List<ProveedorDto> listarClientes() {
+    public List<ProveedorDto> listarProveedores() {
         return proveedorRepository.findAll()
                 .stream()
                 .map(this::mapToDto)
@@ -78,7 +78,7 @@ public class ProveedorServiceImpl implements ProveedorService {
     }
 
     @Override
-    public ProveedorDto actualizarCliente(Long id, ProveedorDto proveedorDto) {
+    public ProveedorDto actualizarProveedor(Long id, ProveedorDto proveedorDto) {
         Proveedor existente = proveedorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con id: " + id));
 
@@ -117,7 +117,7 @@ public class ProveedorServiceImpl implements ProveedorService {
     }
 
     @Override
-    public void eliminarCliente(Long id) {
+    public void eliminarProveedor(Long id) {
         if (!proveedorRepository.existsById(id)) {
             throw new IllegalArgumentException("No existe cliente con id: " + id);
         }

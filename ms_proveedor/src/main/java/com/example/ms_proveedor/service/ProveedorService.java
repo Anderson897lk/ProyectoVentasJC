@@ -3,9 +3,9 @@ import com.example.ms_proveedor.dto.ProveedorDto;
 import java.util.List;
 
 public interface ProveedorService {
-    ProveedorDto crearCliente(ProveedorDto proveedorDto);
-    ProveedorDto obtenerCliente(Long id);
-    List<ProveedorDto> listarClientes();
-    ProveedorDto actualizarCliente(Long id, ProveedorDto proveedorDto);
-    void eliminarCliente(Long id);
+    ProveedorDto crearProveedor(ProveedorDto proveedorDto);
+    ProveedorDto obtenerProveedorPorId(Long id);
+    List<ProveedorDto> listarProveedores();
+    ProveedorDto actualizarProveedor(Long id, ProveedorDto proveedorDto);
+    void eliminarProveedor(Long id);
 }
