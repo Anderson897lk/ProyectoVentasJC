@@ -7,6 +7,6 @@ import com.example.ms_compra.dto.ProveedorDto;
 
 @FeignClient(name = "ms-proveedor-service", url = "${feign.proveedor.url}")
 public interface ProveedorClient {
-    @GetMapping("/api/proveedores/{id}")
+    @GetMapping("/{id}")
     ProveedorDto obtenerProveedor(@PathVariable Long id);
 }
