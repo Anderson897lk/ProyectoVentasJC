@@ -58,7 +58,7 @@ public class CompraServiceImpl implements CompraService {
         inventarioClient.reponeStock(guardada.getProductoId(), updateDto);
 
         // 5. Actualizar precio de venta en Producto
-        productoClient.actualizarPrecio(guardada.getProductoId(), guardada.getPrecioVenta());
+        productoClient.actualizarPrecioVenta(guardada.getProductoId(), guardada.getPrecioVenta());
 
         return mapToDto(guardada);
     }
@@ -108,7 +108,7 @@ public class CompraServiceImpl implements CompraService {
         }
 
         // 7. Actualizar precio en Producto si cambió
-        productoClient.actualizarPrecio(actualizado.getProductoId(), actualizado.getPrecioVenta());
+        productoClient.actualizarPrecioVenta(actualizado.getProductoId(), actualizado.getPrecioVenta());
 
         return mapToDto(actualizado);
     }
