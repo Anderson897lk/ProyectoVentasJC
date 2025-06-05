@@ -1,6 +1,5 @@
 package com.example.ms_proveedor.controller;
 
-
 import com.example.ms_proveedor.dto.ProveedorDto;
 import com.example.ms_proveedor.service.ProveedorService;
 import jakarta.validation.Valid;
@@ -22,19 +21,19 @@ public class ProveedorController {
 
     @PostMapping
     public ResponseEntity<ProveedorDto> crear(@Valid @RequestBody ProveedorDto proveedorDto) {
-        ProveedorDto creado = proveedorService.crearCliente(proveedorDto);
+        ProveedorDto creado = proveedorService.crearProveedor(proveedorDto);
         return new ResponseEntity<>(creado, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProveedorDto> obtener(@PathVariable Long id) {
-        ProveedorDto dto = proveedorService.obtenerCliente(id);
+        ProveedorDto dto = proveedorService.obtenerProveedorPorId(id);
         return ResponseEntity.ok(dto);
     }
 
     @GetMapping
     public ResponseEntity<List<ProveedorDto>> listar() {
-        List<ProveedorDto> lista = proveedorService.listarClientes();
+        List<ProveedorDto> lista = proveedorService.listarProveedores();
         return ResponseEntity.ok(lista);
     }
 
@@ -42,13 +41,13 @@ public class ProveedorController {
     public ResponseEntity<ProveedorDto> actualizar(
             @PathVariable Long id,
             @Valid @RequestBody ProveedorDto proveedorDto) {
-        ProveedorDto actualizado = proveedorService.actualizarCliente(id, proveedorDto);
+        ProveedorDto actualizado = proveedorService.actualizarProveedor(id, proveedorDto);
         return ResponseEntity.ok(actualizado);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        proveedorService.eliminarCliente(id);
+        proveedorService.eliminarProveedor(id);
         return ResponseEntity.noContent().build();
     }
 }
