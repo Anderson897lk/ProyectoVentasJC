@@ -104,7 +104,7 @@ public class CompraServiceImpl implements CompraService {
             inventarioClient.reponeStock(actualizado.getProductoId(), dtoRep);
         } else if (diff < 0) {
             // reservar la diferencia en negativo
-            inventarioClient.reservaStock(actualizado.getProductoId(), Math.abs(diff));
+            inventarioClient.reservarStock(actualizado.getProductoId(), Math.abs(diff));
         }
 
         // 7. Actualizar precio en Producto si cambió
@@ -119,7 +119,7 @@ public class CompraServiceImpl implements CompraService {
                 .orElseThrow(() -> new IllegalArgumentException("Compra no encontrada con id: " + id));
 
         // Al eliminar, restar stock en Inventario (reservar)
-        inventarioClient.reservaStock(compra.getProductoId(), compra.getCantidad());
+        inventarioClient.reservarStock(compra.getProductoId(), compra.getCantidad());
 
         compraRepository.deleteById(id);
     }
