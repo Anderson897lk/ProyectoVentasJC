@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface ProductoClient {
 
     // Ya no incluimos "/api/productos" aquí, porque ya está en el url
-    @PutMapping("/{id}/precio")
+    @PutMapping("/{id}")
     void actualizarPrecio(
             @PathVariable("id") Long id,
             @RequestParam("precioVenta") Double precioVenta
