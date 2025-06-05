@@ -89,6 +89,7 @@ public class ProductoServiceImpl implements ProductoService {
         Producto actualizado = productoRepository.save(existente);
         return mapToDto(actualizado);
     }
+    
 
     @Override
     public void eliminarProducto(Long id) {

@@ -42,4 +42,12 @@ public class ProductoController {
         productoService.eliminarProducto(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/precio")
+    public ResponseEntity<Void> actualizarPrecio(
+            @PathVariable Long id,
+            @RequestParam Double precioVenta) {
+        // … lógica para actualizar el precio …
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "ms-producto-service", url = "${feign.producto.url}")
 public interface ProductoClient {
 
-    /**
-     * Invoca al PUT /api/productos/{id}/precio?precioVenta=…
-     */
-    @PutMapping("/api/productos/{id}/precio")
+    // Ya no incluimos "/api/productos" aquí, porque ya está en el url
+    @PutMapping("/{id}/precio")
     void actualizarPrecio(
             @PathVariable("id") Long id,
             @RequestParam("precioVenta") Double precioVenta
