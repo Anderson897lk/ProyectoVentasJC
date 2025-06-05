@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ms-proveedores-service
+    name: ms-cliente-service
   profiles:
     active: development
   config:

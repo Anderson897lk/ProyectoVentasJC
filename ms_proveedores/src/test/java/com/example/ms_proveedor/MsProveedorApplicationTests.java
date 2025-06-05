@@ -1,10 +1,10 @@
-package com.example.ms_proveedores;
+package com.example.ms_proveedor;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MsProveedoresApplicationTests {
+class MsProveedorApplicationTests {
 
 	@Test
 	void contextLoads() {
