@@ -5,6 +5,9 @@ import com.example.ms_compra.dto.StockDto;
 import com.example.ms_compra.dto.StockUpdateDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Cliente Feign para ms-inventario-service.
