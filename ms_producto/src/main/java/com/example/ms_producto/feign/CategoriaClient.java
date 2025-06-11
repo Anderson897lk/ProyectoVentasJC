@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "ms-categoria", path = "/api/categorias")
 public interface CategoriaClient {
+
     @GetMapping("/{id}")
     CategoriaDto obtenerPorId(@PathVariable("id") Long id);
 }
