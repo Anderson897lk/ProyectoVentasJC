@@ -39,6 +39,15 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
+# -------- CONFIGURACIÓN FEIGN PARA CONECTAR CON ms_categoria --------
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+  categoria:
+    url: http://localhost:8084/api/categorias
 
 resilience4j.circuitbreaker:
   instances:
