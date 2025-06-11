@@ -5,19 +5,6 @@ spring:
   application:
     name: ms-proveedor-service
 
-  # Si en algún momento desearas usar MySQL, descomenta estas líneas y ajusta según tus credenciales:
-  # datasource:
-  #   url: jdbc:mysql://localhost:3306/ms_proveedores_db
-  #   username: root
-  #   password:
-  #   driver-class-name: com.mysql.cj.jdbc.Driver
-  #
-  # jpa:
-  #   hibernate:
-  #     ddl-auto: update
-  #   show-sql: true
-
-  # Configuración H2 en memoria
   datasource:
     url: jdbc:h2:mem:ms_proveedores;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
@@ -49,16 +36,3 @@ eureka:
 feign:
   sunat:
     base-url: https://api.apis.net.pe/v1
-
-
-resilience4j.circuitbreaker:
-  instances:
-    proveedoresValidarRucCB:
-      registerHealthIndicator: true
-      slidingWindowSize: 10
-      permittedNumberOfCallsInHalfOpenState: 3
-      slidingWindowType: TIME_BASED
-      minimumNumberOfCalls: 4
-      waitDurationInOpenState: 5s
-      failureRateThreshold: 50
-      eventConsumerBufferSize: 10
