@@ -64,6 +64,8 @@ spring:
           uri: lb://ms-producto-service
           predicates:
             - Path=/api/productos/**
+          filters:
+            - AuthFilter
 
 
 
