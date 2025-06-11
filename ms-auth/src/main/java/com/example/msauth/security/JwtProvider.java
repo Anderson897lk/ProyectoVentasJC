@@ -1,8 +1,5 @@
-package com.example.ms_auth.security;
-
-
-
-import com.example.ms_auth.entity.AuthUser;
+package com.example.msauth.security;
+import com.example.msauth.entity.AuthUser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,4 +60,3 @@ public class JwtProvider    {
         }
     }
 }
-

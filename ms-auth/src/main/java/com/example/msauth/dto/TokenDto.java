@@ -1,4 +1,5 @@
-package com.example.ms_auth.entity;
+package com.example.msauth.dto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
