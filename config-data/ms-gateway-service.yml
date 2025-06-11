@@ -26,8 +26,6 @@ spring:
           uri: lb://ms-cliente-service           # Nombre lógico registrado en Eureka
           predicates:
               - Path=/api/clientes/**              # Ruta externa para redirigir al microservicio
-          filters:
-            - RewritePath=/api/clientes/(?<segment>.*), /api/clientes/${segment}
 
 
 
