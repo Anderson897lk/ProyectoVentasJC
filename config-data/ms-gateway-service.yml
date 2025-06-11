@@ -21,11 +21,12 @@ spring:
           uri: lb://ms-auth-service
           predicates:
               - Path=/auth/**
-
-        - id: cliente
-          uri: lb://ms-cliente-service
+        - id: ms-cliente-service                 # ID único de la ruta
+          uri: lb://ms-cliente-service           # Nombre lógico registrado en Eureka
           predicates:
-            - Path=/clientes/**
+            - Path=/api/clientes/**              # Ruta externa para redirigir al microservicio
+
+
 
 
 
