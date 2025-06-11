@@ -32,7 +32,5 @@ spring:
           uri: lb://ms-cliente-service
           predicates:
             - Path=/api/clientes**
-          filters:
-            - AuthFilter
 
 
