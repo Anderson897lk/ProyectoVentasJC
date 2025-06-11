@@ -25,7 +25,7 @@ spring:
         - id: ms-cliente-service                 # ID único de la ruta
           uri: lb://ms-cliente-service           # Nombre lógico registrado en Eureka
           predicates:
-              - Path=/api/clientes/**              # Ruta externa para redirigir al microservicio
+              - Path=/clientes/**              # Ruta externa para redirigir al microservicio
 
 
 
