@@ -1,12 +1,10 @@
-package com.example.ms_auth.service.impl;
-
-
-import com.example.ms_auth.dto.AuthUserDto;
-import com.example.ms_auth.entity.AuthUser;
-import com.example.ms_auth.entity.TokenDto;
-import com.example.ms_auth.repository.AuthUserRepository;
-import com.example.ms_auth.security.JwtProvider;
-import com.example.ms_auth.service.AuthUserService;
+package com.example.msauth.service.impl;
+import com.example.msauth.dto.AuthUserDto;
+import com.example.msauth.dto.TokenDto;
+import com.example.msauth.entity.AuthUser;
+import com.example.msauth.repository.AuthUserRepository;
+import com.example.msauth.security.JwtProvider;
+import com.example.msauth.service.AuthUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,8 +31,14 @@ public class AuthUserServiceImpl implements AuthUserService {
                 .password(password)
                 .build();
 
+
+
+
         return authUserRepository.save(authUser);
     }
+
+
+
 
     @Override
     public TokenDto login(AuthUserDto authUserDto) {
@@ -46,6 +50,9 @@ public class AuthUserServiceImpl implements AuthUserService {
         return null;
     }
 
+
+
+
     @Override
     public TokenDto validate(String token) {
         if (!jwtProvider.validate(token))
@@ -56,4 +63,3 @@ public class AuthUserServiceImpl implements AuthUserService {
         return new TokenDto(token);
     }
 }
-

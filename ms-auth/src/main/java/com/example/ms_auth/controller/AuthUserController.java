@@ -1,10 +1,10 @@
-package com.example.ms_auth.controller;
+package com.example.msauth.controller;
 
+import com.example.msauth.dto.AuthUserDto;
+import com.example.msauth.dto.TokenDto;
+import com.example.msauth.entity.AuthUser;
 
-import com.example.ms_auth.dto.AuthUserDto;
-import com.example.ms_auth.entity.AuthUser;
-import com.example.ms_auth.entity.TokenDto;
-import com.example.ms_auth.service.AuthUserService;
+import com.example.msauth.service.AuthUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,4 +39,3 @@ public class AuthUserController {
         return ResponseEntity.ok(authUser);
     }
 }
-
