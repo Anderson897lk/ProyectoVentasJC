@@ -11,8 +11,8 @@
 	<groupId>com.example</groupId>
 	<artifactId>ms_cliente</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ms_producto</name>
-	<description>ms_producto</description>
+	<name>ms_cliente</name>
+	<description>ms_cliente</description>
 	<url/>
 	<licenses>
 		<license/>
