@@ -46,7 +46,7 @@ feign:
         connectTimeout: 5000
         readTimeout: 5000
   categoria:
-    url: http://localhost:53911/api/categorias
+    url: http://localhost:55210/api/categorias
 
 resilience4j.circuitbreaker:
   instances:
