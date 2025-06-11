@@ -1,4 +1,5 @@
-package com.example.ms_auth.security;
+package com.example.msauth.security;
+
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

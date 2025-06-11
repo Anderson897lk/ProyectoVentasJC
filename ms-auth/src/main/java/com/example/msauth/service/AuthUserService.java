@@ -1,9 +1,10 @@
-package com.example.ms_auth.service;
+package com.example.msauth.service;
+
+import com.example.msauth.dto.AuthUserDto;
+import com.example.msauth.dto.TokenDto;
+import com.example.msauth.entity.AuthUser;
 
 
-import com.example.ms_auth.dto.AuthUserDto;
-import com.example.ms_auth.entity.AuthUser;
-import com.example.ms_auth.entity.TokenDto;
 
 public interface AuthUserService {
     public AuthUser save(AuthUserDto authUserDto);
@@ -14,5 +15,3 @@ public interface AuthUserService {
 
     public TokenDto validate(String token);
 }
-
-

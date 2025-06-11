@@ -1,4 +1,4 @@
-package com.example.ms_auth.security;
+package com.example.msauth.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
