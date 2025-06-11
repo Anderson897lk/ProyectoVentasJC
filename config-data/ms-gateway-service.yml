@@ -1,5 +1,11 @@
 server:
-  port: ${PORT:${SERVERS_PORT:0}}
+  port: ${PORT:${SERVERS_PORT:8080}}
+
+logging:
+  level:
+    root: info
+    org.springframework.cloud.gateway: debug
+    org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: info
 
 eureka:
   client:
@@ -31,6 +37,7 @@ spring:
           uri: lb://ms-categoria-service
           predicates:
             - Path=/api/categorias/**
+
 
 
 
