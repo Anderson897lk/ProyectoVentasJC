@@ -1,19 +1,23 @@
 server:
   port: ${PORT:${SERVER_PORT:0}}
+
 spring:
   application:
     name: ms-cliente-service
+  cloud:
+    discovery:
+      enabled: true
 
-  #datasource:
-  #  url: jdbc:mysql://localhost:3306/ms_catalogo
-  #  username: root
-  #  password:
-  #  driver-class-name: com.mysql.cj.jdbc.Driver
+eureka:
+  client:
+    serviceUrl:
+      #defaultZone: http://localhost:8090/eureka
+      defaultZone: ${EUREKA_URI:http://localhost:8090/eureka}
+  instance:
+    #hostname: localhost
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
-  #jpa:
-  #  hibernate:
-  #    ddl-auto: update
-  #  show-sql: true
+
   datasource:
     url: jdbc:h2:mem:ms_cliente
     driver-class-name: org.h2.Driver
@@ -32,14 +36,6 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /doc/swagger-ui.html
-eureka:
-  client:
-    serviceUrl:
-      #defaultZone: http://localhost:8090/eureka
-      defaultZone: ${EUREKA_URI:http://localhost:8090/eureka}
-  instance:
-    #hostname: localhost
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 resilience4j.circuitbreaker:
   instances:
