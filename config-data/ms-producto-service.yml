@@ -39,7 +39,6 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
-# -------- CONFIGURACIÓN FEIGN PARA CONECTAR CON ms_categoria --------
 feign:
   client:
     config:
