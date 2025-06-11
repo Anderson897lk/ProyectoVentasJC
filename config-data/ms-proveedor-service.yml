@@ -4,12 +4,24 @@ server:
 spring:
   application:
     name: ms-proveedor-service
+  cloud:
+    discovery:
+      enabled: true
+
+eureka:
+  client:
+    serviceUrl:
+
+      defaultZone: ${EUREKA_URI:http://localhost:8090/eureka}
+  instance:
+    #hostname: localhost
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
   datasource:
-    url: jdbc:h2:mem:ms_proveedores;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:ms_proveedores
     driver-class-name: org.h2.Driver
     username: sa
-    password:
+    password: password
     jpa:
       database-platform: org.hibernate.dialect.H2Dialect
     h2:
@@ -23,15 +35,6 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /doc/swagger-ui.html
-
-eureka:
-  client:
-    serviceUrl:
-      # Zona de Eureka (ajusta la URL si tu servidor corre en otro host o puerto)
-      defaultZone: ${EUREKA_URI:http://localhost:8090/eureka}
-  instance:
-    #hostname: localhost
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 feign:
   sunat:
