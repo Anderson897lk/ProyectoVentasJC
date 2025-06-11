@@ -28,7 +28,7 @@ spring:
               - Path=/api/clientes/**              # Ruta externa para redirigir al microservicio
 
         - id: ms-categoria-service
-          uri: lb://ms-categoria
+          uri: lb://ms-categoria-service
           predicates:
             - Path=/api/categorias/**
 
