@@ -64,7 +64,6 @@ spring:
           predicates:
             - Path=/api/productos/**
 
-
         - id: ms-venta-service
           uri: lb://ms-venta-service
           predicates:
