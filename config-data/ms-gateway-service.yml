@@ -42,15 +42,12 @@ spring:
           uri: lb://ms-categoria-service
           predicates:
             - Path=/api/categorias/**
-          filters:
-            - AuthFilter
+
 
         - id: ms-proveedor-service
           uri: lb://ms-proveedor-service
           predicates:
             - Path=/api/proveedores/**
-          filters:
-            - AuthFilter
 
         - id: ms-compra-service
           uri: lb://ms-compra-service
@@ -66,8 +63,7 @@ spring:
           uri: lb://ms-producto-service
           predicates:
             - Path=/api/productos/**
-          filters:
-            - AuthFilter
+
 
         - id: ms-venta-service
           uri: lb://ms-venta-service
