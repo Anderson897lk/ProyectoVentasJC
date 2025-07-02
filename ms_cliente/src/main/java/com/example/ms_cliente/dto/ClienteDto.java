@@ -15,7 +15,7 @@ public class ClienteDto {
     @NotBlank(message = "DNI o RUC es obligatorio")
     private String dniOrRuc;
 
-    @NotBlank(message = "Razón social o nombre es obligatorio")
+
     private String razonSocialONombre;
 
     @NotBlank(message = "Dirección es obligatoria")
